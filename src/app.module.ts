@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule,ConfigService } from '@nestjs/config';
 import Configuration from './config/configuration';
 import { ConfigurationKeys } from './config/configuration.keys'
+import { DatabaseModule } from './modules/database/database.module';
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true,
     load: [Configuration]
-  })],
+  }), DatabaseModule],
   controllers: [],
   providers: [],
 })
