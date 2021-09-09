@@ -1,7 +1,7 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConnectionOptions } from 'pg';
-import {ConfigurationKeys} from '../../config/configuration.keys';
+import { ConfigurationKeys } from '../../config/configuration.keys';
 
 
 export const DatabaseProviders = [
