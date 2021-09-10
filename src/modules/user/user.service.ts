@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserDto } from 'src/common/dto/user.dto';
 import { User } from '../database/entities/user.entity';
 import { UserRepository } from './user.repository';
@@ -14,6 +14,8 @@ export class UserService {
   async getAll(): Promise<UserDto[]>{
     try {
       const users: User[] = await this._userRepository.find();
+      if(!users.length) return [];
+
       return users.map(user => this._userMapper.entityToDto(user));
     }
     catch(error){
@@ -24,6 +26,8 @@ export class UserService {
   async findOne(id: number): Promise<UserDto>{
     try {
       const user: User = await this._userRepository.findOne(id);
+      if(!user) throw new NotFoundException('User not found');
+
       return this._userMapper.entityToDto(user);
     }
     catch(error){
@@ -43,6 +47,7 @@ export class UserService {
 
   async delete(id: number): Promise<string>{
     try {
+      await this.findOne(id);
       await this._userRepository.delete(id);
       return `The user with ID ${id} has been deleted`;
     }
@@ -57,6 +62,18 @@ export class UserService {
       await this._userRepository.update(id, user);
       const updatedUser = this.findOne(id);
       return updatedUser;
+    }
+    catch(error){
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async setStatus(id: number): Promise<UserDto>{
+    try {
+      let user = await this.findOne(id);
+      await this._userRepository.update(id, {isActive: !user.isActive});
+      user = await this.findOne(id);
+      return this._userMapper.dtoToEntity(user);
     }
     catch(error){
       throw new BadRequestException(error.message);
