@@ -21,4 +21,17 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Photo, photo => photo.user)
   photos: Photo[];
+
+  constructor(
+    id: number,
+    fullName: string,
+    isActive: boolean,
+    description: string
+  ){
+    super()
+    this.id = id;
+    this.fullName = fullName,
+    this.isActive = isActive,
+    this.description = description
+  }
 }
