@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { UserDto } from 'src/common/dto/user.dto';
 import { User } from '../database/entities/user.entity';
 import { UserRepository } from './user.repository';
-import { UserMapper } from './user.mapper'
+import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class UserService {
