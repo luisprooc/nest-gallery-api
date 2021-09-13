@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserDto } from 'src/common/dto/user.dto';
-import { User } from '../database/entities/user.entity';
 import { UserRepository } from './user.repository';
 import { UserMapper } from './user.mapper';
 
@@ -13,10 +12,10 @@ export class UserService {
 
   async getAll(): Promise<UserDto[]>{
     try {
-      const users: User[] = await this._userRepository.find();
+      const users: UserDto[] = await this._userRepository.find();
       if(!users.length) return [];
 
-      return users.map(user => this._userMapper.entityToDto(user));
+      return users.map(user => this._userMapper.dtoToEntity(user));
     }
     catch(error){
       throw new BadRequestException(error.message);
@@ -25,17 +24,17 @@ export class UserService {
 
   async findOne(id: number): Promise<UserDto>{
     try {
-      const user: User = await this._userRepository.findOne(id);
+      const user: UserDto = await this._userRepository.findOne(id);
       if(!user) throw new NotFoundException('User not found');
 
-      return this._userMapper.entityToDto(user);
+      return this._userMapper.dtoToEntity(user);
     }
     catch(error){
       throw new BadRequestException(error.message);
     }
   }
 
-  async create(user: User): Promise<UserDto>{
+  async create(user: UserDto): Promise<UserDto>{
     try {
       const createdUser = await this._userRepository.save(user);
       return this._userMapper.entityToDto(createdUser);
@@ -57,7 +56,7 @@ export class UserService {
     
   }
 
-  async update(id: number, user: User): Promise<UserDto>{
+  async update(id: number, user: UserDto): Promise<UserDto>{
     try {
       await this._userRepository.update(id, user);
       const updatedUser = this.findOne(id);

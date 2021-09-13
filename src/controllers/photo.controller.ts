@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { PhotoDto } from 'src/common/dto/photo.dto';
-import { Photo } from 'src/modules/database/entities/photo.entity';
-import { User } from 'src/modules/database/entities/user.entity';
+import { UserDto } from 'src/common/dto/user.dto';
 import { PhotoService } from 'src/modules/photo/photo.service';
 
 @Controller('photos')
@@ -9,7 +8,7 @@ export class PhotoController {
   constructor(private _photoService: PhotoService) {}
 
   @Get('/user/:id')
-  findAll(@Param('id', ParseIntPipe) id: User['id']): Promise<PhotoDto[]> {
+  findAll(@Param('id', ParseIntPipe) id: UserDto['id']): Promise<PhotoDto[]> {
     return this._photoService.getAllPhotosByUser(id);
   }
 
@@ -19,7 +18,7 @@ export class PhotoController {
   }
   
   @Post()
-  create(@Body() createPhoto: Photo): Promise<PhotoDto> {
+  create(@Body() createPhoto: PhotoDto): Promise<PhotoDto> {
     return this._photoService.create(createPhoto);
   }
 
@@ -31,9 +30,16 @@ export class PhotoController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number, 
-    @Body() updatePhoto: Photo
+    @Body() updatePhoto: PhotoDto
   ): Promise<PhotoDto> {
     return this._photoService.update(id,updatePhoto);
+  }
+
+  @Delete('/user/:id')
+  deletePhotos(
+    @Param('id', ParseIntPipe) id: UserDto['id'], 
+  ): Promise<string> {
+    return this._photoService.deleteAllPhotosUser(id);
   }
 }
 

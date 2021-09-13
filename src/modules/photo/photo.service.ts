@@ -3,7 +3,7 @@ import { PhotoDto } from 'src/common/dto/photo.dto';
 import { Photo } from '../database/entities/photo.entity';
 import { PhotoRepository } from './photo.repository';
 import { PhotoMapper } from './photo.mapper';
-import { User } from '../database/entities/user.entity';
+import { UserDto } from 'src/common/dto/user.dto';
 
 @Injectable()
 export class PhotoService {
@@ -12,14 +12,14 @@ export class PhotoService {
     private _photoMapper: PhotoMapper
   ){}
 
-  async getAllPhotosByUser(id: User['id']): Promise<PhotoDto[]>{
+  async getAllPhotosByUser(id: UserDto['id']): Promise<PhotoDto[]>{
     try {
-      const photos: Photo[] = await this._photoRepository.find({
+      const photos: PhotoDto[] = await this._photoRepository.find({
         where: {user: id}
       });
       if(!photos.length) return [];
 
-      return photos.map(photo => this._photoMapper.entityToDto(photo));
+      return photos;
     }
     catch(error){
       throw new BadRequestException(error.message);
@@ -28,20 +28,20 @@ export class PhotoService {
 
   async findOne(id: number): Promise<PhotoDto>{
     try {
-      const photo: Photo = await this._photoRepository.findOne(id);
+      const photo: PhotoDto = await this._photoRepository.findOne(id);
       if(!photo) throw new NotFoundException('Photo not found');
 
-      return this._photoMapper.entityToDto(photo);
+      return photo;
     }
     catch(error){
       throw new BadRequestException(error.message);
     }
   }
 
-  async create(photo:Photo): Promise<PhotoDto>{
+  async create(photo: PhotoDto): Promise<PhotoDto>{
     try {
       const createdPhoto = await this._photoRepository.save(photo);
-      return this._photoMapper.entityToDto(createdPhoto);
+      return createdPhoto;
     }
     catch(error){
       throw new BadRequestException(error.message);
@@ -60,13 +60,27 @@ export class PhotoService {
     
   }
 
-  async update(id: number, photo: Photo): Promise<PhotoDto>{
+  async update(id: number, photo: PhotoDto): Promise<PhotoDto>{
     try {
       await this._photoRepository.update(id, {text: photo.text});
       const updatedPhoto = this.findOne(id);
       return updatedPhoto;
     }
     catch(error){
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async deleteAllPhotosUser(id:UserDto['id']): Promise<string>{
+    try {
+      await this._photoRepository.createQueryBuilder()
+      .delete()
+      .from(Photo)
+      .where({user: id})
+      .execute()
+      return `Photos deleted`;
+    } 
+    catch (error) {
       throw new BadRequestException(error.message);
     }
   }
