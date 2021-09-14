@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { PhotoDto } from 'src/common/dto/photo.dto';
 import { UserDto } from 'src/common/dto/user.dto';
 import { PhotoService } from 'src/modules/photo/photo.service';
 
 @Controller('photos')
+@UseGuards(ThrottlerGuard)
 export class PhotoController {
   constructor(private _photoService: PhotoService) {}
 

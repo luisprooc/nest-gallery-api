@@ -5,12 +5,26 @@ import { ConfigurationKeys } from './config/configuration.keys'
 import { DatabaseModule } from './modules/database/database.module';
 import { UserModule } from './modules/user/user.module';
 import { PhotoModule } from './modules/photo/photo.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
-  imports: [ConfigModule.forRoot({
+  imports: [
+    ConfigModule.forRoot({
     isGlobal: true,
     load: [Configuration]
-  }), DatabaseModule, UserModule, PhotoModule],
+    }), 
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        ttl: config.get<number>(ConfigurationKeys.THROTTLE_TTL),
+        limit: config.get<number>(ConfigurationKeys.THROTTLE_LIMIT),
+      }),
+    }),
+    DatabaseModule, 
+    UserModule, 
+    PhotoModule
+],
 })
 export class AppModule {
   static port: number;

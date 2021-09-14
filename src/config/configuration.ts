@@ -1,5 +1,7 @@
 export default () => ({
   PORT: parseInt(process.env.PORT, 10),
+  THROTTLE_TTL: parseInt(process.env.THROTTLE_TTL,10),
+  THROTTLE_LIMIT: parseInt(process.env.THROTTLE_LIMIT,10),
   DATABASE: {
     DB_HOST: process.env.DB_HOST,
     DB_PORT: parseInt(process.env.DB_PORT, 10),

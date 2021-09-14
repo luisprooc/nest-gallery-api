@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, UseGuards } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import {UserDto } from 'src/common/dto/user.dto'
 import { UserService } from 'src/modules/user/user.service';
 
 @Controller('users')
+@UseGuards(ThrottlerGuard)
 export class UserController {
   constructor(private readonly _userService: UserService){}
 

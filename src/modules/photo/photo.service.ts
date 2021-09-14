@@ -2,14 +2,11 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PhotoDto } from 'src/common/dto/photo.dto';
 import { Photo } from '../database/entities/photo.entity';
 import { PhotoRepository } from './photo.repository';
-import { PhotoMapper } from './photo.mapper';
 import { UserDto } from 'src/common/dto/user.dto';
-
 @Injectable()
 export class PhotoService {
   constructor(
     private  _photoRepository: PhotoRepository,
-    private _photoMapper: PhotoMapper
   ){}
 
   async getAllPhotosByUser(id: UserDto['id']): Promise<PhotoDto[]>{
