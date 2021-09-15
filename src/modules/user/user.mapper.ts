@@ -6,6 +6,7 @@ export class UserMapper {
     return new User(
       userDto.id,
       userDto.fullName,
+      userDto.username,
       userDto.isActive,
       userDto.description,
     );
@@ -15,6 +16,7 @@ export class UserMapper {
     return new UserDto(
       user.id,
       user.fullName,
+      user.username,
       user.isActive,
       user.description
     );

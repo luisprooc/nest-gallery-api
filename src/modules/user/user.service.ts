@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { UserDto } from 'src/common/dto/user.dto';
 import { UserRepository } from './user.repository';
 import { UserMapper } from './user.mapper';
+import { encryptPassword } from 'src/common/encrypt/encryption';
 
 @Injectable()
 export class UserService {
@@ -36,6 +37,11 @@ export class UserService {
 
   async create(user: UserDto): Promise<UserDto>{
     try {
+      const userExist = await this._userRepository.findOne({username: user.username});
+      if(userExist) throw new BadRequestException(`This username is already taken`);
+
+      user['password'] = encryptPassword(user.password);
+
       const createdUser = await this._userRepository.save(user);
       return this._userMapper.entityToDto(createdUser);
     }

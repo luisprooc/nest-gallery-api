@@ -11,6 +11,10 @@ export class UserDto {
 
   @ApiProperty()
   @IsString()
+  username: string;
+
+  @ApiProperty()
+  @IsString()
   password: string;
 
   @ApiProperty()
@@ -25,11 +29,13 @@ export class UserDto {
   constructor(
     id: number,
     fullName: string,
+    username: string,
     isActive: boolean,
     description: string
   ){
     this.id = id;
     this.fullName = fullName,
+    this.username = username,
     this.isActive = isActive,
     this.description = description
   }

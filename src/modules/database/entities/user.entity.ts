@@ -10,6 +10,9 @@ export class User extends BaseEntity {
   @Column({type: 'varchar', nullable: false, length: 50})
   fullName: string;
 
+  @Column({type: 'varchar', nullable: false, length: 25})
+  username: string;
+
   @Column({type: 'varchar', nullable: false})
   password: string;
 
@@ -25,12 +28,14 @@ export class User extends BaseEntity {
   constructor(
     id: number,
     fullName: string,
+    username: string,
     isActive: boolean,
     description: string
   ){
     super()
     this.id = id;
     this.fullName = fullName,
+    this.username = username,
     this.isActive = isActive,
     this.description = description
   }
