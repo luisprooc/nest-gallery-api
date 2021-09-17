@@ -6,6 +6,7 @@ import { DatabaseModule } from './modules/database/database.module';
 import { UserModule } from './modules/user/user.module';
 import { PhotoModule } from './modules/photo/photo.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
     }),
     DatabaseModule, 
     UserModule, 
-    PhotoModule
+    PhotoModule,
+    AuthModule
 ],
 })
 export class AppModule {

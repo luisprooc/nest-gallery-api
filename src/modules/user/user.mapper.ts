@@ -1,5 +1,5 @@
 import { User } from "src/modules/database/entities/user.entity";
-import { UserDto } from "../../common/dto/user.dto";
+import { UserDto } from "../../common/dto/user/user.dto";
 
 export class UserMapper {
   dtoToEntity(userDto: UserDto): User {

@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { PhotoDto } from 'src/common/dto/photo.dto';
+import { PhotoDto } from 'src/common/dto/photo/photo.dto';
 import { Photo } from '../database/entities/photo.entity';
 import { PhotoRepository } from './photo.repository';
-import { UserDto } from 'src/common/dto/user.dto';
+import { UserDto } from 'src/common/dto/user/user.dto';
 @Injectable()
 export class PhotoService {
   constructor(

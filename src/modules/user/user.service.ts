@@ -1,14 +1,17 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { UserDto } from 'src/common/dto/user.dto';
+import { UserDto } from 'src/common/dto/user/user.dto';
 import { UserRepository } from './user.repository';
 import { UserMapper } from './user.mapper';
-import { encryptPassword } from 'src/common/encrypt/encryption';
+import { encryptPassword,comparePassword } from 'src/common/encrypt/encryption';
+import { AuthService } from '../auth/auth.service';
+import { LoginUserDto } from 'src/common/dto/user/login-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     private  _userRepository: UserRepository,
-    private _userMapper: UserMapper
+    private _userMapper: UserMapper,
+    private _authService: AuthService
   ){}
 
   async getAll(): Promise<UserDto[]>{
@@ -73,12 +76,28 @@ export class UserService {
     }
   }
 
-  async setStatus(id: number): Promise<UserDto>{
+  async setStatus(id: UserDto['id']): Promise<UserDto>{
     try {
       let user = await this.findOne(id);
       await this._userRepository.update(id, {isActive: !user.isActive});
       user = await this.findOne(id);
       return this._userMapper.dtoToEntity(user);
+    }
+    catch(error){
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async login({username, password}: LoginUserDto): Promise<any>{
+    try {
+      const user = await this._userRepository.findOne({where: {username: username}});
+      if(!user) throw new BadRequestException(`User not exist`);
+
+      if(comparePassword(password, user.password)){
+        return this._authService.login(user);
+      }
+
+      throw new BadRequestException(`Password not match`);
     }
     catch(error){
       throw new BadRequestException(error.message);

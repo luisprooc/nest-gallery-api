@@ -1,5 +1,5 @@
 import { Photo } from "src/modules/database/entities/photo.entity";
-import { PhotoDto } from "../../common/dto/photo.dto";
+import { PhotoDto } from "../../common/dto/photo/photo.dto";
 
 export class PhotoMapper {
   dtoToEntity(photoDto: PhotoDto): Photo {
