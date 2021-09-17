@@ -35,14 +35,9 @@ $ npm install
 ## Running the app
 
 ```bash
-# development
+$ docker run --name my-pg -dp 5444:5432 -e POSTGRES_PASSWORD=yourpassword postgres
+$ npm run migration:run
 $ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
 ## Test
